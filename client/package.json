@@ -12,7 +12,9 @@
     "moment": "^2.18.1",
     "react": "^15.4.2",
     "react-chartjs2": "^1.1.1",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "socket.io-client": "^1.7.3",
+    "socket.io-react": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

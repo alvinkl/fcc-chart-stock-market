@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import moment from 'moment'
+import { socketConnect } from 'socket.io-react'
 
 import Graph from './graph'
 
@@ -12,6 +13,7 @@ class Container extends Component {
 
     this.loadData = this.loadData.bind(this)
     this.setStockName = this.setStockName.bind(this)
+    this.handleRemoveItem = this.handleRemoveItem.bind(this)
   }
 
   componentWillMount() {
@@ -24,6 +26,8 @@ class Container extends Component {
 
   setStockName(e) {
     e.preventDefault()
+    this.props.socket.emit('test', 'Hello world')
+
     const stock_name = e.target.stock_name.value
     console.log('------------------------------------');
     console.log(this.state.stock_names);
@@ -70,7 +74,21 @@ class Container extends Component {
       })
   }
 
+  handleRemoveItem(e) {
+    const stockname = e.target.name
+    axios.delete('http://localhost:3100', { stockname: stockname })
+      .then(res => console.log(res))
+  }
+
   render() {
+    const listStocks = this.state.stock_names ? this.state.stock_names.map(name => (
+      <div>
+        <button onClick={ this.handleRemoveItem } keys={ name } name={ name }>{ name }</button>
+      </div>
+    )) : null
+    console.log('------------------------------------');
+    console.log(listStocks);
+    console.log('------------------------------------');
     return (
       <div>
         <Graph data={ this.state.result } />
@@ -78,9 +96,10 @@ class Container extends Component {
           <input type="text" name='stock_name'/>
           <button type='submit'>Submit</button>
         </form>
+        { listStocks }
       </div>
     );
   }
 }
 
-export default Container;
+export default socketConnect(Container);
